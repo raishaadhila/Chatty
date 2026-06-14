@@ -1,20 +1,32 @@
 {
-  "name": "fast-chat",
-  "version": "2.0.0",
-  "description": "AI Coffee Shop Assistant - Telegram Bot with Groq",
+  "name": "chatty",
+  "version": "1.0.0",
+  "description": "AI-Powered Customer Service Platform for Indonesian SMBs",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "seed": "node src/db/seed.js"
+    "frontend:dev": "cd frontend && npm run dev",
+    "frontend:build": "cd frontend && npm run build",
+    "dev:all": "concurrently \"npm run dev\" \"npm run frontend:dev\""
   },
   "dependencies": {
-    "better-sqlite3": "^11.7.0",
-    "dotenv": "^16.4.0",
     "express": "^4.18.0",
-    "groq-sdk": "^0.8.0",
-    "node-telegram-bot-api": "^0.64.0",
-    "winston": "^3.13.0"
+    "dotenv": "^16.4.0",
+    "firebase-admin": "^12.1.0",
+    "@anthropic-ai/sdk": "^0.30.0",
+    "openai": "^4.60.0",
+    "stripe": "^16.8.0",
+    "@sendgrid/mail": "^8.1.0",
+    "pdf-lib": "^1.17.1",
+    "jsonwebtoken": "^9.0.0",
+    "bcryptjs": "^2.4.3",
+    "multer": "^1.4.5-lts.1",
+    "csv-parse": "^5.5.0",
+    "axios": "^1.7.0",
+    "node-cron": "^3.0.3",
+    "winston": "^3.13.0",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.0"

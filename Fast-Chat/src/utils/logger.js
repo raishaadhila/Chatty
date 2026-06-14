@@ -7,6 +7,7 @@ const logger = createLogger({
     format.errors({ stack: true }),
     format.json()
   ),
+  defaultMeta: { service: 'chatty' },
   transports: [
     new transports.Console({
       format: format.combine(format.colorize(), format.simple()),
