@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="https://readme-typing-svg.demolab.com?font=Inter&weight=700&size=36&pause=1000&color=5B6EF5&center=true&vCenter=true&width=600&lines=Fast-Chat+%F0%9F%92%AC;AI-Powered+CRM+Automation" alt="Fast-Chat" />
+<img src="https://readme-typing-svg.demolab.com?font=Inter&weight=700&size=36&pause=1000&color=5B6EF5&center=true&vCenter=true&width=600&lines=Chatty;AI-Powered+Customer+Service+Platform" alt="Chatty" />
 
-**Automate customer conversations across WhatsApp, Telegram & Instagram — powered by Claude & GPT-4o.**
+**AI-Powered Customer Service Platform for Indonesian SMBs.**
 
 [![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org)
 [![Firebase](https://img.shields.io/badge/Firebase-Realtime_DB-FF6F00?style=for-the-badge&logo=firebase&logoColor=white)](https://firebase.google.com)
@@ -10,323 +10,378 @@
 [![Anthropic](https://img.shields.io/badge/Anthropic-Claude-5B6EF5?style=for-the-badge)](https://anthropic.com)
 [![Deploy](https://img.shields.io/badge/Deploy-Railway-0B0D0E?style=for-the-badge&logo=railway&logoColor=white)](https://railway.app)
 
-[View Prototype](#-prototype) · [Quick Start](#-quick-start) · [API Reference](#-api-reference) · [Deploy](#-deploy-to-railway)
+[Features](#features) · [Quick Start](#getting-started) · [API Reference](#api-routes) · [Deploy](#deployment-railway)
 
 </div>
 
 ---
 
-## 📌 Overview
-
-**Fast-Chat** is an omnichannel AI CRM that brings all your customer conversations into **one smart inbox** and automatically responds using AI — matched to your brand voice.
-
-Built for small businesses that want 24/7 customer support without hiring more staff.
-
-```
-Customer sends a message on WhatsApp / Telegram / Instagram
-                        ↓
-            Fast-Chat receives via webhook
-                        ↓
-         AI reads customer profile + history
-                        ↓
-        Claude or GPT-4o generates a reply
-      (in your brand's tone, within 1-2 seconds)
-                        ↓
-          Reply is sent back automatically ✅
-```
+Chatty is a hosted, multi-tenant SaaS that acts as a 24/7 AI customer service representative. It handles inbound messages on WhatsApp and Telegram, responds in under 2 seconds, generates invoices, executes follow-ups, and delivers daily intelligence reports to business owners.
 
 ---
 
-## ✨ Features
+## Tech Stack
 
-| | Feature | Description |
-|---|---|---|
-| 🗂️ | **Unified Inbox** | All WhatsApp, Telegram & Instagram messages in one dashboard |
-| 🤖 | **AI Auto-Reply** | Claude or GPT-4o responds automatically in under 2 seconds |
-| 🎨 | **Brand Voice** | Customize AI tone per business — formal, friendly, casual |
-| 👥 | **Customer Profiles** | Auto-built profiles with history, tags, notes & purchase data |
-| 📊 | **Analytics** | Response times, sentiment scores, channel & AI breakdown |
-| 🔗 | **Webhooks** | Sync purchase data from Shopify or any e-commerce platform |
-| 🔒 | **Escalation** | AI hands off to a human agent when it's uncertain |
+**Backend**
+- Node.js + Express
+- Firebase Realtime Database
+- Anthropic Claude Sonnet (general replies) + OpenAI GPT-4o (complex queries)
+- WhatsApp Business API + Telegram Bot API
+- Stripe (billing) + SendGrid (email) + pdf-lib (PDF generation)
+- node-cron (scheduled tasks)
+
+**Frontend**
+- React 18 + Vite
+- Tailwind CSS
+- Framer Motion (animations)
+- lucide-react (icons)
+- recharts (charts)
 
 ---
 
-## 🗂️ Project Structure
+## Features
+
+### Core Modules (v1.0)
+
+| Module | Description |
+|---|---|
+| **Smart Inbox** | Unified inbox for WhatsApp and Telegram. AI auto-replies in <2s. Manual override per conversation. |
+| **Real-Time Catalog** | Upload CSV or connect Google Sheets. AI checks live stock/price before answering. 15-min auto-sync. |
+| **Follow-Up Automation** | Trigger-based sequences (purchase, cart abandonment, no reply). Up to 3 steps on Starter, unlimited on Growth+. |
+| **Invoice Generation** | Natural language invoice commands. PDF generation and delivery via WhatsApp/email. Payment reminders. |
+| **Owner Reports** | Daily morning briefing (Growth+), evening summary, weekly recap, urgent escalation alerts. |
+
+### Additional Features
+
+- Multi-tenant workspace isolation
+- 5-step onboarding wizard
+- Post-onboarding nurture sequence (Day 1/3/7/10/14)
+- AI confidence detection with automatic escalation
+- 3 pricing tiers: Starter ($19), Growth ($59), Pro ($149)
+- Branded PDF weekly reports (Pro plan)
+- Stripe checkout + billing portal
+
+---
+
+## Project Structure
 
 ```
-Fast-Chat/
-│
-├── 📄 prototype.html              # Clickable UI demo — open in browser, no setup needed
-├── 📄 PRD.md                      # Product vision, features & goals
-├── 📄 requirements.md             # Functional & non-functional requirements
-├── 📄 tasks.md                    # Implementation task checklist
-│
+├── PRD.md                          # Product Requirements Document
+├── README.md
+├── .env.example                    # Environment variables template
+├── .gitignore
+├── package.json
+├── data/                           # Legacy SQLite data (Fast-Chat origin)
+│   └── store.db
 ├── src/
-│   ├── server.js                  # Express server + rate limiting
-│   ├── config/index.js            # All environment variables
-│   ├── utils/logger.js            # Winston structured logger
+│   ├── server.js                   # Entry point + cron jobs
+│   ├── config/index.js             # Environment config
 │   │
-│   ├── webhooks/                  # Incoming message endpoints
-│   │   └── index.js               # Routes: /webhook/whatsapp, /telegram, /instagram
+│   ├── db/
+│   │   ├── firebase.js            # Firebase Realtime DB layer (Chatty)
+│   │   ├── index.js               # Legacy SQLite connection (Fast-Chat)
+│   │   ├── queries.js             # Legacy SQLite queries (Fast-Chat)
+│   │   └── seed.js                # Legacy seed data (Fast-Chat)
 │   │
-│   ├── channels/                  # Channel integrations
-│   │   ├── whatsapp.js            # WhatsApp Business API
-│   │   ├── telegram.js            # Telegram Bot API
-│   │   └── instagram.js           # Instagram Graph API
+│   ├── middleware/
+│   │   └── workspace.js           # Multi-tenant auth + plan enforcement
 │   │
-│   ├── router/
-│   │   └── messageRouter.js       # Dispatches messages → AI model → reply
+│   ├── ai/
+│   │   ├── router.js              # Routes to Claude or GPT-4o based on complexity
+│   │   ├── claude.js              # Anthropic Claude Sonnet client
+│   │   ├── gpt4o.js               # OpenAI GPT-4o client
+│   │   ├── contextBuilder.js      # System prompt builder + catalog context
+│   │   ├── catalogLookup.js       # Stock/price queries from Firebase
+│   │   ├── confidence.js          # AI uncertainty detection (14 patterns)
+│   │   └── groqClient.js          # Legacy Groq client (Fast-Chat, unused)
 │   │
-│   ├── ai/                        # AI response engine
-│   │   ├── openaiClient.js        # GPT-4o client (complex queries)
-│   │   ├── anthropicClient.js     # Claude client (general queries)
-│   │   ├── prompts.js             # Templates: greeting, FAQ, sales, support
-│   │   ├── contextManager.js      # Keeps last 10 messages as context
-│   │   ├── toneCustomizer.js      # Builds system prompt from brand tone
-│   │   └── fallback.js            # Escalates to human when AI is uncertain
+│   ├── channels/
+│   │   ├── whatsapp.js            # WhatsApp Business API (send, receive, verify)
+│   │   └── telegram.js            # Telegram Bot API (send, receive, webhook)
 │   │
-│   ├── profiles/                  # Customer profile management
-│   │   ├── firebase.js            # Firebase Admin SDK
-│   │   ├── schema.js              # Database schema reference
-│   │   ├── customerService.js     # Create, read, update, delete, search
-│   │   ├── enrichment.js          # Inbound webhook for purchase data
-│   │   └── routes.js              # REST API: /api/profiles
+│   ├── billing/
+│   │   ├── stripe.js              # Stripe checkout, portal, webhooks
+│   │   └── plans.js               # Plan limits + usage enforcement
 │   │
-│   ├── analytics/                 # Reporting
-│   │   ├── events.js              # Log events to Firebase
-│   │   ├── aggregator.js          # Compute KPIs from raw events
-│   │   ├── export.js              # Generate CSV downloads
-│   │   └── routes.js              # REST API: /api/analytics
+│   ├── onboarding/
+│   │   ├── wizard.js              # 5-step onboarding flow
+│   │   └── nurture.js             # Post-onboarding nurture (Day 1/3/7/10/14)
 │   │
-│   └── dashboard/
-│       └── routes.js              # REST API: /api/dashboard/summary
+│   ├── catalog/
+│   │   ├── csv.js                 # CSV upload + parse
+│   │   └── sheets.js              # Google Sheets live sync
+│   │
+│   ├── invoices/
+│   │   ├── parser.js              # NL command → invoice data
+│   │   ├── generator.js           # PDF generation + delivery to customer
+│   │   └── reminders.js           # Payment due date alerts
+│   │
+│   ├── followups/
+│   │   ├── engine.js              # Sequence execution engine
+│   │   └── triggers.js            # 4 trigger types detection
+│   │
+│   ├── reports/
+│   │   ├── daily.js               # 8AM morning briefing (WA + email)
+│   │   ├── evening.js             # 9PM evening summary (Growth+)
+│   │   ├── weekly.js              # Monday recap + branded PDF (Pro)
+│   │   └── alert.js               # Urgent escalation alerts
+│   │
+│   ├── routes/
+│   │   ├── auth.js                # Sign up, login (JWT)
+│   │   ├── webhook.js             # WhatsApp + Telegram inbound webhooks
+│   │   ├── onboarding.js          # Onboarding wizard API
+│   │   ├── billing.js             # Stripe billing routes
+│   │   └── dashboard.js           # Dashboard CRUD (20+ endpoints)
+│   │
+│   ├── bot/
+│   │   ├── messageHandler.js      # Core message handler (AI routing + escalation)
+│   │   └── telegram.js            # Legacy Telegram bot (Fast-Chat, unused)
+│   │
+│   ├── utils/
+│   │   ├── logger.js              # Winston logger
+│   │   ├── email.js               # SendGrid email integration
+│   │   └── pdf.js                 # PDF utility helpers
+│   │
+│   └── dashboard/public/
+│       └── index.html             # Legacy HTML dashboard (fallback in dev)
 │
-├── .env.example                   # All required environment variables
-├── railway.json                   # Railway one-click deploy config
-└── package.json
+└── frontend/                      # React SPA (Vite + Tailwind)
+    ├── index.html
+    ├── package.json
+    ├── vite.config.js             # Dev proxy → Express :3000
+    ├── tailwind.config.js         # Design tokens (colors, shadows, fonts)
+    ├── postcss.config.js
+    ├── public/favicon.svg
+    └── src/
+        ├── main.jsx               # React entry
+        ├── App.jsx                # Client-side routes
+        ├── index.css              # Tailwind + custom utilities
+        ├── lib/api.js             # API client (JWT auth)
+        ├── components/
+        │   ├── shared/ui.jsx      # Design system (Button, Card, Badge, etc.)
+        │   └── landing/
+        │       ├── Navbar.jsx     # Sticky glassmorphic nav
+        │       ├── Hero.jsx       # Full-screen hero + animated chat demo
+        │       ├── SocialProof.jsx
+        │       ├── ProblemSolution.jsx
+        │       ├── Features.jsx   # 5 modules showcase
+        │       ├── HowItWorks.jsx
+        │       ├── Pricing.jsx    # 3 tiers + monthly/annual toggle
+        │       ├── Testimonials.jsx
+        │       ├── FinalCTA.jsx
+        │       └── Footer.jsx
+        └── pages/
+            ├── Landing.jsx        # Landing page composition
+            ├── Login.jsx          # Auth (sign in / sign up)
+            ├── Onboarding.jsx     # 5-step wizard with progress bar
+            ├── DashboardLayout.jsx # Sidebar + header shell
+            ├── Inbox.jsx          # 3-pane inbox (list | chat | context)
+            ├── Customers.jsx      # Customer table with search
+            ├── Catalog.jsx        # Product catalog + sync status
+            ├── FollowUps.jsx      # Sequence list + visual step builder
+            ├── Invoices.jsx       # Invoice table + NL create modal
+            ├── Reports.jsx        # KPI cards + charts + settings
+            └── Settings.jsx       # Business profile + notifications
 ```
+
+### Legacy Files (from Fast-Chat origin)
+
+These files exist from the original Fast-Chat coffee shop bot but are **not used** by Chatty:
+
+| File | Purpose | Status |
+|---|---|---|
+| `src/db/index.js` | SQLite connection | Replaced by `firebase.js` |
+| `src/db/queries.js` | SQLite queries | Replaced by Firebase reads |
+| `src/db/seed.js` | SQLite seed data | Not needed (Firebase) |
+| `src/ai/groqClient.js` | Groq SDK client | Replaced by Claude + GPT-4o |
+| `src/bot/telegram.js` | Telegram polling bot | Replaced by webhook-based `channels/telegram.js` |
+| `data/store.db` | SQLite database file | Not used in production |
 
 ---
 
-## 🚀 Quick Start
+## Getting Started
 
-### 1 — Clone & Install
+### 1. Clone and install
 
 ```bash
-git clone https://github.com/raishaadhila/Fast-Chat.git
+git clone <repo-url>
 cd Fast-Chat
+
+# Backend (includes all server dependencies)
 npm install
+
+# Frontend
+cd frontend && npm install && cd ..
+
+# Optional: for running both backend + frontend simultaneously
+npm install -D concurrently
 ```
 
-### 2 — Set Environment Variables
+### 2. Configure environment
 
 ```bash
 cp .env.example .env
+# Edit .env with your keys (see Environment Variables below)
 ```
 
-Open `.env` and fill in your keys:
-
-```env
-# Server
-PORT=3000
-
-# AI
-OPENAI_API_KEY=sk-...
-ANTHROPIC_API_KEY=sk-ant-...
-
-# WhatsApp Business API
-WHATSAPP_TOKEN=...
-WHATSAPP_PHONE_NUMBER_ID=...
-WHATSAPP_VERIFY_TOKEN=any-secret-you-choose
-
-# Telegram
-TELEGRAM_BOT_TOKEN=...
-
-# Instagram
-INSTAGRAM_ACCESS_TOKEN=...
-INSTAGRAM_VERIFY_TOKEN=any-secret-you-choose
-
-# Firebase
-FIREBASE_PROJECT_ID=...
-FIREBASE_CLIENT_EMAIL=...
-FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n..."
-FIREBASE_DATABASE_URL=https://your-project.firebaseio.com
-```
-
-### 3 — Run
+### 3. Run development
 
 ```bash
-npm run dev     # development (auto-reload)
-npm start       # production
+# Backend only (Express on :3000)
+npm run dev
+
+# Frontend only (Vite on :5173, proxies /api → :3000)
+npm run frontend:dev
+
+# Both simultaneously (requires concurrently)
+npm run dev:all
 ```
 
-Server starts at `http://localhost:3000`
+### 4. Production build
 
----
-
-## 🖥️ Prototype
-
-> Open **`prototype.html`** in any browser — no server or API keys needed.
-
-Demonstrates the full product UI:
-
-- **Inbox** — live conversations, AI typing indicator, send messages, toggle AI on/off
-- **Customer Panel** — profile, tags, notes, purchase history, tone override
-- **Analytics** — KPI cards, conversation volume chart, channel & AI breakdown
-- **Settings** — connect channels, configure AI model, set brand tone & system prompt
-
----
-
-## 📡 API Reference
-
-### Webhooks — Receive Messages
-
-```
-GET  /webhook/whatsapp      Webhook verification (Meta)
-POST /webhook/whatsapp      Incoming WhatsApp messages
-
-POST /webhook/telegram      Incoming Telegram messages
-
-GET  /webhook/instagram     Webhook verification (Meta)
-POST /webhook/instagram     Incoming Instagram messages
-```
-
-### Customer Profiles
-
-```
-GET    /api/profiles                     List all profiles
-                                         Query: ?tag=VIP&channel=wa&name=Aisyah
-GET    /api/profiles/:customerId         Get one profile
-PATCH  /api/profiles/:customerId         Update notes, tags, tone, preferences
-DELETE /api/profiles/:customerId         Delete profile (GDPR compliance)
-POST   /api/profiles/enrich/webhook      Receive purchase data from e-commerce
-```
-
-### Analytics
-
-```
-GET  /api/analytics/kpis      KPIs for a date range
-                               Query: ?from=2025-01-01&to=2025-01-31
-GET  /api/analytics/export    Download conversation data as CSV
-```
-
-### Dashboard
-
-```
-GET  /api/dashboard/summary   7-day overview: KPIs + total customers
-GET  /health                  Health check
+```bash
+npm run frontend:build    # Build React → frontend/dist/
+npm start                 # Express serves frontend/dist/ + API
 ```
 
 ---
 
-## 🤖 AI Routing Logic
+## Environment Variables
 
-Fast-Chat picks the AI model based on the incoming channel:
+Copy `.env.example` to `.env` and fill in:
 
-| Channel | Model | Reason |
+| Variable | Required | Description |
 |---|---|---|
-| WhatsApp | OpenAI GPT-4o | Higher query complexity, product & sales questions |
-| Telegram | Anthropic Claude | General support, fast conversational replies |
-| Instagram | Anthropic Claude | Short-form, casual tone matches platform style |
+| `JWT_SECRET` | Yes | Random string for JWT signing |
+| `FIREBASE_PROJECT_ID` | Yes | Firebase project ID |
+| `FIREBASE_CLIENT_EMAIL` | Yes | Firebase service account email |
+| `FIREBASE_PRIVATE_KEY` | Yes | Firebase service account private key |
+| `FIREBASE_DATABASE_URL` | Yes | Firebase Realtime Database URL |
+| `ANTHROPIC_API_KEY` | Yes | Anthropic API key for Claude |
+| `OPENAI_API_KEY` | Yes | OpenAI API key for GPT-4o |
+| `WHATSAPP_VERIFY_TOKEN` | No | WhatsApp webhook verify token |
+| `WHATSAPP_ACCESS_TOKEN` | No | WhatsApp Business API access token |
+| `WHATSAPP_PHONE_NUMBER_ID` | No | WhatsApp phone number ID |
+| `TELEGRAM_BOT_TOKEN` | No | Telegram bot token |
+| `STRIPE_SECRET_KEY` | No | Stripe secret key |
+| `STRIPE_WEBHOOK_SECRET` | No | Stripe webhook signing secret |
+| `STRIPE_STARTER_PRICE_ID` | No | Stripe price ID for Starter plan |
+| `STRIPE_GROWTH_PRICE_ID` | No | Stripe price ID for Growth plan |
+| `STRIPE_PRO_PRICE_ID` | No | Stripe price ID for Pro plan |
+| `SENDGRID_API_KEY` | No | SendGrid API key for email |
+| `GOOGLE_SERVICE_ACCOUNT_EMAIL` | No | Google service account for Sheets sync |
+| `GOOGLE_PRIVATE_KEY` | No | Google service account private key |
 
-**Fallback:** If the AI reply contains uncertainty phrases ("I don't know", "I can't help"), the conversation is automatically escalated to a human agent with a log entry.
-
----
-
-## 🔥 Firebase Schema
-
-```
-/profiles/{customerId}
-  ├── customerId        string
-  ├── customerName      string
-  ├── channel           "whatsapp" | "telegram" | "instagram"
-  ├── contactDetails    { phone, username }
-  ├── preferences       object
-  ├── tags              string[]
-  ├── notes             string
-  ├── purchaseHistory   object[]
-  ├── businessTone      "friendly" | "formal" | "casual" | "professional"
-  ├── createdAt         ISO string
-  └── lastSeen          unix timestamp
-
-/context/{customerId}
-  └── [ { role: "user" | "assistant", content: string } ]  ← max 10 entries
-
-/analytics/events/{pushId}
-  ├── event             string
-  ├── channel           string
-  ├── customerId        string
-  ├── model             "openai" | "anthropic"
-  ├── responseTimeMs    number
-  └── timestamp         ISO string
-```
+The app starts gracefully without optional services configured.
 
 ---
 
-## 🚢 Deploy to Railway
+## API Routes
 
-1. Push this repo to GitHub
-2. Go to [railway.app](https://railway.app) → **New Project** → **Deploy from GitHub**
-3. Select `raishaadhila/Fast-Chat`
-4. Add all environment variables from `.env.example` in the Railway dashboard
-5. Done — Railway auto-detects Node.js and deploys using `railway.json`
+### Auth
+| Method | Route | Description |
+|---|---|---|
+| POST | `/api/auth/signup` | Create account + workspace |
+| POST | `/api/auth/login` | Sign in, get JWT |
 
-> **Estimated cost:** Under $5/month for the first 50 workspaces on Railway's Starter plan.
+### Webhooks
+| Method | Route | Description |
+|---|---|---|
+| GET | `/api/webhook/whatsapp` | WhatsApp webhook verification |
+| POST | `/api/webhook/whatsapp` | WhatsApp inbound messages |
+| POST | `/api/webhook/telegram` | Telegram inbound messages |
+
+### Onboarding (requires auth)
+| Method | Route | Description |
+|---|---|---|
+| GET | `/api/onboarding/status` | Get onboarding progress |
+| POST | `/api/onboarding/step` | Complete a wizard step |
+| GET | `/api/onboarding/samples` | Get sample AI messages |
+
+### Billing (requires auth)
+| Method | Route | Description |
+|---|---|---|
+| GET | `/api/billing/plans` | List all plans + limits |
+| GET | `/api/billing/current` | Get current plan |
+| POST | `/api/billing/create-checkout` | Create Stripe checkout session |
+| POST | `/api/billing/portal` | Create Stripe billing portal |
+| POST | `/api/billing/stripe-webhook` | Stripe webhook handler |
+
+### Dashboard (requires auth)
+| Method | Route | Description |
+|---|---|---|
+| GET | `/api/dashboard/stats` | Workspace stats |
+| GET | `/api/dashboard/customers` | List customers |
+| GET | `/api/dashboard/customers/:id` | Customer detail |
+| POST | `/api/dashboard/send-message` | Manual reply to customer |
+| GET | `/api/dashboard/conversations` | List conversations |
+| POST | `/api/dashboard/catalog/upload` | Upload CSV catalog |
+| POST | `/api/dashboard/catalog/sheets` | Connect Google Sheets |
+| GET | `/api/dashboard/catalog` | List catalog items |
+| POST | `/api/dashboard/invoices/create` | Create invoice (NL command) |
+| GET | `/api/dashboard/invoices` | List invoices |
+| POST | `/api/dashboard/invoices/:id/pay` | Mark invoice paid |
+| POST | `/api/dashboard/sequences/create` | Create follow-up sequence |
+| GET | `/api/dashboard/sequences` | List sequences |
+| POST | `/api/dashboard/sequences/:id/toggle` | Toggle sequence on/off |
+| GET | `/api/dashboard/digest` | Preview daily digest |
+| GET | `/api/dashboard/weekly-report` | Preview weekly report |
+| GET | `/api/dashboard/settings` | Get workspace settings |
+| PUT | `/api/dashboard/settings` | Update workspace settings |
+
+### Health
+| Method | Route | Description |
+|---|---|---|
+| GET | `/api/health` | Health check |
 
 ---
 
-## 🛠️ Tech Stack
+## Cron Jobs (WIB / UTC+7)
 
-| Layer | Technology |
-|---|---|
-| Runtime | Node.js 18+ |
-| Framework | Express.js |
-| AI — General | Anthropic Claude (`claude-sonnet-4-6`) |
-| AI — Complex | OpenAI GPT-4o |
-| Database | Firebase Realtime Database |
-| Channels | WhatsApp Business API · Telegram Bot API · Instagram Graph API |
-| Logging | Winston |
-| Deployment | Railway |
+| Schedule | Task | Description |
+|---|---|---|
+| `*/15 * * * *` | Catalog sync | Sync Google Sheets catalog for all linked workspaces |
+| `0 8 * * *` | Daily digest | Send morning briefing via WA + email |
+| `0 9 * * *` | Payment reminders | Send invoice due date alerts |
+| `0 10 * * *` | Nurture sequence | Process post-onboarding touchpoints |
+| `0 21 * * *` | Evening summary | Send end-of-day wrap-up (Growth+) |
+| `0 8 * * 1` | Weekly report | Send Monday weekly recap (Pro: branded PDF) |
 
 ---
 
-## 🎯 Goals
+## Pricing Tiers
 
-- 🏆 10 paying customers within 3 months of launch
-- ⭐ 90% customer satisfaction within 6 months
-- ⚡ Average AI response time under 2 seconds
-
----
-
-## 📄 Documentation
-
-| File | Description |
-|---|---|
-| [`PRD.md`](./PRD.md) | Product vision, key features & business goals |
-| [`requirements.md`](./requirements.md) | Functional & non-functional requirements |
-| [`tasks.md`](./tasks.md) | Full implementation task checklist |
+| | Starter | Growth | Pro |
+|---|---|---|---|
+| Price | $19/mo | $59/mo | $149/mo |
+| AI conversations | 500/mo | 2,500/mo | Unlimited |
+| Channels | WA + TG | WA + TG + IG | Unlimited |
+| Invoices | 3/mo | Unlimited | Unlimited |
+| Follow-up sequences | 2 | Unlimited | Unlimited |
+| Team seats | 1 | 2 | 5 |
+| Owner briefings | — | WA morning + evening | WA + branded PDF |
+| API access | — | — | Yes |
 
 ---
 
-## 🤝 Contributing
+## Deployment (Railway)
+
+1. Push to GitHub
+2. Create Railway project, connect repo
+3. Set environment variables in Railway dashboard
+4. Railway auto-deploys on push
 
 ```bash
-# 1. Fork the repo
-# 2. Create your branch
-git checkout -b feature/your-feature
-
-# 3. Commit
-git commit -m "feat: add your feature"
-
-# 4. Push & open a PR
-git push origin feature/your-feature
+# Railway will run:
+npm install
+cd frontend && npm install && npm run build
+npm start
 ```
+
+Estimated cost: <$5/month at launch scale.
 
 ---
 
-<div align="center">
+## License
 
-
-`raishaalfadhilaputri@gmail.com`
-
-</div>
+Private — Raisha Adhila
